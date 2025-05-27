@@ -26,7 +26,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { UserRoleEnum } from "@shared/schema";
-import { RoleSwitcher } from "@/components/role-switcher";
+// import { RoleSwitcher } from "@/components/role-switcher"; // REMOVED
 import { TeacherClassesMenu } from "./teacher-classes-menu";
 import { SchoolAdminScheduleMenu } from "./school-admin-schedule-menu";
 import { ReactNode, forwardRef } from "react";
@@ -51,9 +51,12 @@ interface SidebarProps {
   toggleSidebarPin: () => void;
   requestClose: () => void;
   setSidebarOpen: (isOpen: boolean) => void; // Added setSidebarOpen
+  position?: { x: number, y: number } | null; // New prop
+  isAnimatingPin?: boolean; // ADD this prop
 }
 
-export const Sidebar = forwardRef<HTMLElement, SidebarProps>(({ isOpen, isSidebarPinned, toggleSidebarPin, requestClose, setSidebarOpen }, ref) => {
+export const Sidebar = forwardRef<HTMLElement, SidebarProps>(
+  ({ isOpen, isSidebarPinned, toggleSidebarPin, requestClose, setSidebarOpen, position, isAnimatingPin }, ref) => {
   const [location] = useLocation();
   const { user } = useAuth();
 
@@ -118,16 +121,50 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(({ isOpen, isSideba
     [UserRoleEnum.VICE_PRINCIPAL]: "Завуч"
   };
 
+  const sidebarStyle: React.CSSProperties = {};
+  const sidebarNominalWidth = 256; // w-64
+  const screenEdgePadding = 16; // 1rem, for keeping sidebar off the very edge
+
+  console.log('[Sidebar] Rendering. isOpen:', isOpen, 'isSidebarPinned:', isSidebarPinned, 'position:', position, 'isAnimatingPin:', isAnimatingPin);
+
+  if (position && !isSidebarPinned) { // Condition changed: isOpen removed from here
+    let top = position.y;
+    let left = position.x;
+
+    // Adjust if too close to the right edge
+    if (left + sidebarNominalWidth + screenEdgePadding > window.innerWidth) {
+      left = window.innerWidth - sidebarNominalWidth - screenEdgePadding;
+    }
+    // Adjust if too close to the bottom edge
+    const sidebarCurrentHeight = (ref && typeof ref === 'object' && ref.current) 
+                                  ? ref.current.offsetHeight 
+                                  : (window.innerHeight - 2 * screenEdgePadding);
+    if (top + sidebarCurrentHeight + screenEdgePadding > window.innerHeight) {
+      top = window.innerHeight - sidebarCurrentHeight - screenEdgePadding;
+    }
+
+    // Ensure it's not off the top or left edge
+    sidebarStyle.top = Math.max(screenEdgePadding, top) + 'px';
+    sidebarStyle.left = Math.max(screenEdgePadding, left) + 'px';
+    console.log('[Sidebar] Style: DYNAMIC/UNPINNED. top:', sidebarStyle.top, 'left:', sidebarStyle.left, 'isOpen:', isOpen);
+  } else {
+    // Default position for pinned state or when not dynamically positioned
+    sidebarStyle.top = '1rem';
+    sidebarStyle.left = '1rem';
+    console.log('[Sidebar] Style: DEFAULT/PINNED. top: 1rem, left: 1rem, isOpen:', isOpen);
+  }
+
   return (
     <aside
       ref={ref}
       className={cn(
-        "fixed top-4 left-4 bottom-4 z-40 w-64 rounded-3xl", // Explicit height h-[calc(100vh-2rem)] removed
+        "fixed z-40 w-64 rounded-3xl max-h-[calc(100vh-2rem)]", // top-4, left-4 REMOVED
         "bg-transparent backdrop-blur-2xl shadow-lg border border-white/15", // MODIFIED: bg-white/10 to bg-transparent
         "overflow-y-auto sidebar overflow-hidden sidebar-glowing-effect", // `relative` removed, Scrolling, identifiers, effects
-        "transition-all duration-500 ease-in-out", // MODIFIED: duration-300 to duration-500
-        isOpen ? "opacity-100 pointer-events-auto transform-none" : "opacity-0 pointer-events-none -translate-x-full" // MODIFIED for transform
+        isAnimatingPin ? "transition-all duration-300 ease-in-out" : "transition-[opacity,transform] duration-300 ease-in-out", // CONDITIONAL TRANSITION
+        isOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none" // Animation classes changed
       )}
+      style={sidebarStyle} // ADDED style attribute
     >
       {/* Sidebar Header: Pin and Close buttons */}
       <div className="flex items-center justify-between p-3"> {/* Removed border-b border-slate-700/50 */}
@@ -137,9 +174,9 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(({ isOpen, isSideba
           aria-label={isSidebarPinned ? "Unpin sidebar" : "Pin sidebar"}
         >
           {isSidebarPinned ? (
-            <PinOffIcon className="h-5 w-5" />
+            <PinOffIcon className="h-4 w-4" />
           ) : (
-            <PinIcon className="h-5 w-5" />
+            <PinIcon className="h-4 w-4" />
           )}
         </button>
         <button
@@ -147,7 +184,7 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(({ isOpen, isSideba
           className="p-1 text-gray-700 hover:text-gray-900 hover:bg-black/5 rounded-md transition-colors" // MODIFIED: p-1.5 to p-1
           aria-label="Close sidebar"
         >
-          <XIcon className="h-5 w-5" />
+          <XIcon className="h-4 w-4" />
         </button>
       </div>
 
@@ -166,9 +203,9 @@ export const Sidebar = forwardRef<HTMLElement, SidebarProps>(({ isOpen, isSideba
         </div>
 
         {/* Переключатель ролей - отображается только для пользователей с несколькими ролями */}
-        <div className="mt-3">
-          <RoleSwitcher />
-        </div>
+        {/* <div className="mt-3"> */}
+        {/*   <RoleSwitcher /> */}
+        {/* </div> */}
         {/* Pin Button was here, now moved to the header */}
       </div>
 
