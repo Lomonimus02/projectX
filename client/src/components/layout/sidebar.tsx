@@ -18,7 +18,10 @@ import {
   UserCogIcon,
   UserPlusIcon,
   UsersIcon,
-  ClipboardListIcon
+  ClipboardListIcon,
+  PinIcon,
+  PinOffIcon,
+  XIcon
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -26,7 +29,7 @@ import { UserRoleEnum } from "@shared/schema";
 import { RoleSwitcher } from "@/components/role-switcher";
 import { TeacherClassesMenu } from "./teacher-classes-menu";
 import { SchoolAdminScheduleMenu } from "./school-admin-schedule-menu";
-import { ReactNode } from "react";
+import { ReactNode, forwardRef } from "react";
 
 interface LinkMenuItem {
   id: string;
@@ -44,11 +47,21 @@ type NavItem = LinkMenuItem | ComponentMenuItem;
 
 interface SidebarProps {
   isOpen: boolean;
+  isSidebarPinned: boolean;
+  toggleSidebarPin: () => void;
+  requestClose: () => void;
+  setSidebarOpen: (isOpen: boolean) => void; // Added setSidebarOpen
 }
 
-export function Sidebar({ isOpen }: SidebarProps) {
+export const Sidebar = forwardRef<HTMLElement, SidebarProps>(({ isOpen, isSidebarPinned, toggleSidebarPin, requestClose, setSidebarOpen }, ref) => {
   const [location] = useLocation();
   const { user } = useAuth();
+
+  const handleNavLinkClick = () => {
+    if (!isSidebarPinned && isOpen) {
+      setSidebarOpen(false);
+    }
+  };
 
   // Maps user roles to which menu items they can see
   const roleAccess = {
@@ -107,24 +120,47 @@ export function Sidebar({ isOpen }: SidebarProps) {
 
   return (
     <aside
+      ref={ref}
       className={cn(
-        "fixed top-4 left-4 bottom-4 z-40 w-64 rounded-3xl", // Positioning, width, shape
-        "bg-slate-200/25 backdrop-blur-[28px] shadow-2xl border border-white/10", // Adjusted Glass effect
-        "overflow-y-auto sidebar relative overflow-hidden sidebar-glowing-effect", // Scrolling, identifiers, effects
-        "transition-opacity duration-300 ease-in-out", // Visibility transition
-        isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none" // Visibility based on isOpen
+        "fixed top-4 left-4 bottom-4 z-40 w-64 rounded-3xl", // Explicit height h-[calc(100vh-2rem)] removed
+        "bg-transparent backdrop-blur-2xl shadow-lg border border-white/15", // MODIFIED: bg-white/10 to bg-transparent
+        "overflow-y-auto sidebar overflow-hidden sidebar-glowing-effect", // `relative` removed, Scrolling, identifiers, effects
+        "transition-all duration-500 ease-in-out", // MODIFIED: duration-300 to duration-500
+        isOpen ? "opacity-100 pointer-events-auto transform-none" : "opacity-0 pointer-events-none -translate-x-full" // MODIFIED for transform
       )}
     >
+      {/* Sidebar Header: Pin and Close buttons */}
+      <div className="flex items-center justify-between p-3"> {/* Removed border-b border-slate-700/50 */}
+        <button
+          onClick={toggleSidebarPin}
+          className="p-1 text-gray-700 hover:text-gray-900 hover:bg-black/5 rounded-md transition-colors" // MODIFIED: p-1.5 to p-1
+          aria-label={isSidebarPinned ? "Unpin sidebar" : "Pin sidebar"}
+        >
+          {isSidebarPinned ? (
+            <PinOffIcon className="h-5 w-5" />
+          ) : (
+            <PinIcon className="h-5 w-5" />
+          )}
+        </button>
+        <button
+          onClick={requestClose}
+          className="p-1 text-gray-700 hover:text-gray-900 hover:bg-black/5 rounded-md transition-colors" // MODIFIED: p-1.5 to p-1
+          aria-label="Close sidebar"
+        >
+          <XIcon className="h-5 w-5" />
+        </button>
+      </div>
+
       {/* User Info */}
-      <div className="p-4 border-b border-slate-300/70">
+      <div className="p-4"> {/* Removed border-b and border-slate-700/50 */}
         <div className="flex items-center">
-          <Avatar className="h-7 w-7 border-2 border-slate-400/50"> {/* Avatar size changed */}
+          <Avatar className="h-7 w-7 border-2 border-slate-600/50"> {/* Avatar border color adjusted */}
             <AvatarFallback className="bg-primary text-white">
               {user?.firstName?.[0]}{user?.lastName?.[0]}
             </AvatarFallback>
           </Avatar>
           <div className="ml-3">
-            <p className="text-sm font-medium text-slate-900">{user?.firstName} {user?.lastName}</p>
+            <p className="text-sm font-medium text-gray-900">{user?.firstName} {user?.lastName}</p>
             {/* User role display removed */}
           </div>
         </div>
@@ -133,10 +169,11 @@ export function Sidebar({ isOpen }: SidebarProps) {
         <div className="mt-3">
           <RoleSwitcher />
         </div>
+        {/* Pin Button was here, now moved to the header */}
       </div>
 
       {/* Navigation */}
-      <nav className="py-4 px-2">
+      <nav className="py-2 px-2"> {/* MODIFIED: py-4 to py-2 */}
         <div className="space-y-1">
           {allowedItems.map((item) => {
             // Если у пункта есть компонент, отображаем его
@@ -150,17 +187,17 @@ export function Sidebar({ isOpen }: SidebarProps) {
                             (linkItem.href !== "/" && location.startsWith(linkItem.href));
 
             return (
-              <Link key={linkItem.id} href={linkItem.href}>
+              <Link key={linkItem.id} href={linkItem.href} onClick={handleNavLinkClick}>
                 <div className={cn(
-                  "group flex items-center px-2 py-2 text-sm font-medium", // base styles, rounded-md removed here
+                  "group flex items-center px-2 py-1.5 text-sm font-medium rounded-full transition-[color,background-color,border-color,text-decoration-color,fill,stroke,box-shadow] duration-300 ease-in-out", // MODIFIED: py-2 to py-1.5
                   isActive
-                    ? "bg-white/50 backdrop-blur-md shadow-lg text-[rgb(2,191,122)] rounded-full" // Active item: updated glass pill
-                    : "text-slate-900 hover:bg-slate-200/70 hover:text-slate-900 rounded-md" // Default item: even darker text, light glass hover, keep rounded-md
+                    ? "bg-white/20 backdrop-blur-md shadow-md text-[rgb(2,191,122)] border border-white/30" // MODIFIED active state style
+                    : "text-gray-800 hover:bg-black/5 hover:text-gray-900" // Inactive state specific
                 )}>
                   <span className={cn(
                     isActive
                       ? "text-[rgb(2,191,122)]" // Active icon color
-                      : "text-slate-700 group-hover:text-[rgb(2,191,122)]" // Default icon color (even darker), green on hover
+                      : "text-gray-600 group-hover:text-[rgb(2,191,122)] transition-colors" // Default icon color: darker, green on hover
                   )}>
                     {linkItem.icon}
                   </span>
@@ -173,4 +210,4 @@ export function Sidebar({ isOpen }: SidebarProps) {
       </nav>
     </aside>
   );
-}
+});
