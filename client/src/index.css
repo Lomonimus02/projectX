@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 100% 50%; /* TEMPORARY DEBUG: Bright Red */
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased text-foreground; /* bg-background removed */
+    background-color: rgb(5, 8, 13); /* Very dark base */
+    background-image: radial-gradient(ellipse at 70% 30%, hsla(162, 98%, 45%, 0.08) 0px, transparent 50%), radial-gradient(ellipse at 30% 70%, hsla(180, 90%, 50%, 0.06) 0px, transparent 55%);
+    background-size: 250% 250%;
+    background-repeat: no-repeat;
+    animation: dynamicSwirlBase 60s infinite alternate ease-in-out;
+    position: relative; /* For pseudo-elements */
+    z-index: 1; /* Base stacking context for body itself, above potential fixed bg layers */
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  /* Специальные стили только для страницы расписания */
+  .schedule-container {
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Added for sidebar glowing effect */
+.sidebar-glowing-effect::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1; /* Behind sidebar's own background color, but above page content */
+  opacity: 0.7; /* Adjust opacity of the glow effect itself */
+  background-image: radial-gradient(circle at 15% 30%, rgba(2,191,122,0.1) 0%, transparent 35%),
+                    radial-gradient(circle at 85% 65%, rgba(2,191,122,0.08) 0%, transparent 40%),
+                    radial-gradient(circle at 50% 50%, rgba(2,191,122,0.05) 0%, transparent 30%);
+  background-size: 300% 300%; /* Make gradients large for smooth movement */
+  background-repeat: no-repeat;
+  animation: animateGlowingLights 35s infinite alternate ease-in-out;
+}
+
+@keyframes animateGlowingLights {
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 80% 30%; /* Intermediate points for less linear feel */
+  }
+  50% {
+    background-position: 20% 70%;
+  }
+  75% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 0%; /* Loop or a different end position for alternate */
+  }
+}
+
+/* Dynamic Abstract Background Layers */
+body::before,
+body::after {
+  content: '';
+  position: fixed; /* Fixed to viewport */
+  inset: 0;
+  pointer-events: none; /* Allow clicks to pass through */
+  background-repeat: no-repeat;
+}
+
+body::before {
+  z-index: -20; /* Behind body's direct content & other pseudo */
+  background-image: radial-gradient(circle at 10% 20%, hsla(162, 98%, 50%, 0.1) 0%, transparent 35%),
+                    radial-gradient(circle at 90% 80%, hsla(190, 80%, 55%, 0.08) 0%, transparent 40%);
+  background-size: 300% 300%;
+  animation: dynamicSwirlLayer1 45s infinite linear alternate;
+}
+
+body::after {
+  z-index: -10; /* Between body::before and body's direct content */
+  background-image: radial-gradient(ellipse at 50% 50%, hsla(0, 0%, 100%, 0.04) 0px, transparent 30%),
+                    radial-gradient(ellipse at 20% 80%, hsla(50, 100%, 70%, 0.05) 0px, transparent 40%);
+  background-size: 200% 200%;
+  animation: dynamicSwirlLayer2 75s infinite linear alternate;
+  /* Mix blend mode can create interesting effects if desired, e.g., mix-blend-mode: overlay; */
+}
+
+@keyframes dynamicSwirlBase {
+  0% { background-position: 0% 0%, 100% 100%; }
+  50% { background-position: 50% 70%, 30% 20%; }
+  100% { background-position: 0% 0%, 100% 100%; }
+}
+
+@keyframes dynamicSwirlLayer1 {
+  0% { background-position: 0% 50%, 100% 50%; transform: scale(1) rotate(0deg); opacity: 0.7; }
+  50% { background-position: 50% 0%, 50% 100%; transform: scale(1.1) rotate(5deg); opacity: 1; }
+  100% { background-position: 0% 50%, 100% 50%; transform: scale(1) rotate(0deg); opacity: 0.7; }
+}
+
+@keyframes dynamicSwirlLayer2 {
+  0% { background-position: 50% 100%, 0% 0%; transform: scale(1.05) rotate(-3deg); opacity: 1; }
+  50% { background-position: 0% 0%, 100% 100%; transform: scale(1) rotate(0deg); opacity: 0.6; }
+  100% { background-position: 50% 100%, 0% 0%; transform: scale(1.05) rotate(-3deg); opacity: 1; }
+}
