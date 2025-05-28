@@ -140,9 +140,9 @@ export default function Dashboard() {
     // Для родителей и других ролей
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-4">
-          <h3 className="text-lg font-heading font-semibold text-gray-800 mb-4">Общая статистика</h3>
-          <p className="text-gray-600">Здесь будет отображаться общая статистика и отчеты.</p>
+        <div className="lg:col-span-2 p-4 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
+          <h3 className="text-xl font-semibold text-slate-700 mb-4">Общая статистика</h3>
+          <p className="text-slate-500">Здесь будет отображаться общая статистика и отчеты.</p>
         </div>
         <HomeworkList />
       </div>
@@ -151,22 +151,24 @@ export default function Dashboard() {
   
   return (
     <MainLayout>
-      <h2 className="text-2xl font-heading font-bold text-gray-800 mb-4">Панель управления</h2>
-      
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        {stats.map((stat, index) => (
-          <StatCard 
-            key={index}
-            title={stat.title}
-            value={stat.value}
-            icon={stat.icon}
-          />
-        ))}
+      <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl font-bold text-slate-700 mb-6">Панель управления</h2>
+        
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          {stats.map((stat, index) => (
+            <StatCard 
+              key={index}
+              title={stat.title}
+              value={stat.value}
+              icon={stat.icon}
+            />
+          ))}
+        </div>
+        
+        {/* Role-specific dashboard content */}
+        {getDashboardContent()}
       </div>
-      
-      {/* Role-specific dashboard content */}
-      {getDashboardContent()}
     </MainLayout>
   );
 }

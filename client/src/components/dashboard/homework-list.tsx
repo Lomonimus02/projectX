@@ -49,13 +49,13 @@ export function HomeworkList() {
   };
   
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4">
-      <h3 className="text-lg font-heading font-semibold text-gray-800 mb-4">Домашние задания</h3>
+    <div className="p-4 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
+      <h3 className="text-xl font-semibold text-slate-700 mb-4">Домашние задания</h3>
       
       {isLoading ? (
-        <div className="text-center py-4 text-gray-500">Загрузка...</div>
+        <div className="text-center py-4 text-slate-500">Загрузка...</div>
       ) : upcomingHomeworks.length === 0 ? (
-        <div className="text-center py-4 text-gray-500">Нет активных домашних заданий</div>
+        <div className="text-center py-4 text-slate-500">Нет активных домашних заданий</div>
       ) : (
         <div className="space-y-3">
           {upcomingHomeworks.map((homework) => {
@@ -64,8 +64,8 @@ export function HomeworkList() {
             return (
               <div key={homework.id} className="flex justify-between items-center">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{homework.title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-sm font-medium text-slate-700">{homework.title}</p>
+                  <p className="text-xs text-slate-400 mt-0.5">
                     Сдать до: {new Date(homework.dueDate).toLocaleDateString('ru-RU')}
                   </p>
                 </div>
@@ -79,7 +79,7 @@ export function HomeworkList() {
       )}
       
       <div className="mt-4 text-center">
-        <a href="/homework" className="text-sm text-primary hover:text-primary-dark">
+        <a href="/homework" className="text-sm text-[rgb(2,191,122)] hover:text-[rgb(2,191,122)]/80">
           Все задания
         </a>
       </div>

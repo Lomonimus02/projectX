@@ -61,6 +61,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { cn } from "@/lib/utils"; // Added cn import
 
 // Extended user schema with validation
 const userFormSchema = insertUserSchema.extend({
@@ -655,23 +656,23 @@ export default function UsersPage() {
     <MainLayout>
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="p-6 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
           <DialogHeader>
-            <DialogTitle>Удаление пользователя</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-slate-800">Удаление пользователя</DialogTitle>
+            <DialogDescription className="text-slate-600">
               Вы уверены, что хотите удалить пользователя {selectedUser?.firstName} {selectedUser?.lastName}?
               Это действие нельзя будет отменить.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-end">
             <Button
-              variant="outline"
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium bg-white/15 backdrop-filter backdrop-blur-lg text-slate-200 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_1px_2px_rgba(0,0,0,0.05)] hover:bg-white/25 active:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 transition-all duration-200 ease-in-out"
               onClick={() => setIsDeleteDialogOpen(false)}
             >
               Отмена
             </Button>
             <Button
-              variant="destructive"
+              className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium text-white bg-gradient-to-b from-red-500/90 via-red-600 to-red-700/90 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_5px_15px_rgba(220,38,38,0.3),0_8px_25px_rgba(220,38,38,0.25)] hover:from-red-500 hover:via-red-600/95 hover:to-red-700 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.25),0_6px_18px_rgba(220,38,38,0.35),0_10px_30px_rgba(220,38,38,0.3)] hover:-translate-y-px active:scale-[0.97] active:from-red-600 active:via-red-700/95 active:to-red-700/90 active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.3)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-500/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 transition-all duration-200 ease-in-out"
               onClick={confirmDelete}
               disabled={deleteUserMutation.isPending}
             >
@@ -688,17 +689,18 @@ export default function UsersPage() {
         </DialogContent>
       </Dialog>
       
-      <Tabs defaultValue="users" className="w-full">
-        <TabsList className="mb-6">
-          <TabsTrigger value="users" className="flex items-center">
-            <UsersIcon className="mr-2 h-4 w-4" />
+      <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8"> {/* NEW WRAPPER DIV */}
+        <Tabs defaultValue="users" className="w-full">
+          <TabsList className="inline-flex h-auto items-center justify-center rounded-full bg-white/10 backdrop-filter backdrop-blur-xl p-1 shadow-lg border border-white/20 mb-6">
+            <TabsTrigger value="users" className="inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold border border-transparent ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-slate-500 hover:bg-slate-700/10 hover:text-slate-700 data-[state=active]:bg-white/25 data-[state=active]:backdrop-filter data-[state=active]:backdrop-blur-lg data-[state=active]:text-[rgb(2,191,122)] data-[state=active]:shadow-xl data-[state=active]:border-white/30">
+              <UsersIcon className="mr-2 h-4 w-4" />
             Пользователи
           </TabsTrigger>
-          <TabsTrigger value="student-classes" className="flex items-center">
+          <TabsTrigger value="student-classes" className="inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold border border-transparent ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-slate-500 hover:bg-slate-700/10 hover:text-slate-700 data-[state=active]:bg-white/25 data-[state=active]:backdrop-filter data-[state=active]:backdrop-blur-lg data-[state=active]:text-[rgb(2,191,122)] data-[state=active]:shadow-xl data-[state=active]:border-white/30">
             <BookOpen className="mr-2 h-4 w-4" />
             Ученики и классы
           </TabsTrigger>
-          <TabsTrigger value="parent-students" className="flex items-center">
+          <TabsTrigger value="parent-students" className="inline-flex items-center justify-center whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold border border-transparent ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-slate-500 hover:bg-slate-700/10 hover:text-slate-700 data-[state=active]:bg-white/25 data-[state=active]:backdrop-filter data-[state=active]:backdrop-blur-lg data-[state=active]:text-[rgb(2,191,122)] data-[state=active]:shadow-xl data-[state=active]:border-white/30">
             <UserPlusIcon className="mr-2 h-4 w-4" />
             Родители и дети
           </TabsTrigger>
@@ -707,9 +709,11 @@ export default function UsersPage() {
         {/* Users Tab */}
         <TabsContent value="users">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-heading font-bold text-gray-800">Пользователи</h2>
+            <h2 className="text-3xl font-bold text-slate-700 mb-6">Пользователи</h2>
             {!isPrincipal() && (
-              <Button onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
+              <Button 
+                className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium text-white bg-gradient-to-b from-[rgb(2,191,122)]/95 via-[rgb(2,191,122)]/90 to-[rgb(2,191,122)]/95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_0_0_1.5px_rgba(255,255,255,0.2),0_5px_15px_-3px_rgba(0,0,0,0.08),_0_8px_25px_-8px_rgba(0,0,0,0.07)] hover:from-[rgb(2,191,122)]/95 hover:via-[rgb(2,191,122)]/90 hover:to-[rgb(2,191,122)]/95 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_0_0_1.5px_rgba(255,255,255,0.3),0_6px_18px_-3px_rgba(0,0,0,0.1),0_10px_30px_-8px_rgba(0,0,0,0.09)] hover:-translate-y-px active:scale-[0.97] active:from-[rgb(2,191,122)]/95 active:via-[rgb(2,191,122)]/90 active:to-[rgb(2,191,122)]/95 active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.25)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(2,191,122)]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100 transition-all duration-200 ease-in-out"
+                onClick={() => { resetForm(); setIsAddDialogOpen(true); }}>
                 <Plus className="mr-2 h-4 w-4" /> Добавить пользователя
               </Button>
             )}
@@ -721,7 +725,7 @@ export default function UsersPage() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input
                 placeholder="Поиск пользователей..."
-                className="pl-10"
+                className={cn("flex h-10 w-full items-center rounded-xl border border-white/20 bg-slate-100/20 pr-3 py-2 text-sm text-slate-800 placeholder:text-slate-500/80 backdrop-filter backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_2px_0_rgba(0,0,0,0.08)] ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(2,191,122)]/50 focus-visible:border-[rgb(2,191,122)]/70", "pl-10")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -732,16 +736,16 @@ export default function UsersPage() {
                 value={roleFilter}
                 onValueChange={(value) => setRoleFilter(value as UserRoleEnum | "all")}
               >
-                <SelectTrigger>
+                <SelectTrigger className="flex h-10 w-full items-center justify-between rounded-xl border border-white/20 bg-slate-100/20 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-500/80 backdrop-filter backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_2px_0_rgba(0,0,0,0.08)] ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(2,191,122)]/50 focus-visible:border-[rgb(2,191,122)]/70">
                   <div className="flex items-center">
                     <Filter className="h-4 w-4 mr-2" />
                     <SelectValue placeholder="Фильтр по роли" />
                   </div>
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Все роли</SelectItem>
+                <SelectContent className="relative z-50 p-1 min-w-[8rem] overflow-hidden rounded-2xl border border-white/20 bg-slate-100/50 backdrop-filter backdrop-blur-xl text-slate-800 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
+                  <SelectItem value="all" className="relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm text-slate-800 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-[rgb(2,191,122)]/20 data-[highlighted]:text-[rgb(2,191,122)] focus:bg-[rgb(2,191,122)]/20 focus:text-[rgb(2,191,122)]">Все роли</SelectItem>
                   {Object.values(UserRoleEnum).map((role) => (
-                    <SelectItem key={role} value={role}>
+                    <SelectItem key={role} value={role} className="relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm text-slate-800 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-[rgb(2,191,122)]/20 data-[highlighted]:text-[rgb(2,191,122)] focus:bg-[rgb(2,191,122)]/20 focus:text-[rgb(2,191,122)]">
                       {getRoleName(role as UserRoleEnum)}
                     </SelectItem>
                   ))}
@@ -751,48 +755,48 @@ export default function UsersPage() {
           </div>
           
           {/* Users Table */}
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="p-0 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20 overflow-hidden">
             <Table>
-              <TableHeader>
+              <TableHeader className="bg-slate-700/10">
                 <TableRow>
-                  <TableHead>Имя</TableHead>
-                  <TableHead>Логин</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Роль</TableHead>
-                  <TableHead>Школа</TableHead>
-                  <TableHead className="text-right">Действия</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Имя</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Логин</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Email</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Роль</TableHead>
+                  <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Школа</TableHead>
+                  <TableHead className="px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">Действия</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="divide-y divide-white/10">
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-6">
+                    <TableCell colSpan={6} className="text-center py-6 text-slate-600">
                       Загрузка...
                     </TableCell>
                   </TableRow>
                 ) : filteredUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-6">
+                    <TableCell colSpan={6} className="text-center py-6 text-slate-600">
                       {searchQuery || roleFilter !== "all" ? "Пользователи не найдены" : "Нет пользователей"}
                     </TableCell>
                   </TableRow>
                 ) : (
                   filteredUsers.map((u) => (
                     <TableRow key={u.id}>
-                      <TableCell className="font-medium">{u.firstName} {u.lastName}</TableCell>
-                      <TableCell>{u.username}</TableCell>
-                      <TableCell>{u.email}</TableCell>
-                      <TableCell>{getRoleName(u.role)}</TableCell>
-                      <TableCell>{u.schoolId || '-'}</TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800">{u.firstName} {u.lastName}</TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-slate-800">{u.username}</TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-slate-800">{u.email}</TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{getRoleName(u.role)}</TableCell>
+                      <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{u.schoolId || '-'}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           {canEdit() && (
                             <>
                               <Button variant="ghost" size="sm" onClick={() => handleEdit(u)}>
-                                <Pencil className="h-4 w-4" />
+                                <Pencil className="h-4 w-4 text-[rgb(2,191,122)]" />
                               </Button>
-                              <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600" onClick={() => handleDelete(u)}>
-                                <Trash2 className="h-4 w-4" />
+                              <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-500" onClick={() => handleDelete(u)}>
+                                <Trash2 className="h-4 w-4 text-red-400" />
                               </Button>
                             </>
                           )}
@@ -809,38 +813,41 @@ export default function UsersPage() {
         {/* Student-Classes Tab */}
         <TabsContent value="student-classes">
           <div className="mb-6">
-            <h2 className="text-2xl font-heading font-bold text-gray-800">Управление учениками в классах</h2>
+            <h2 className="text-3xl font-bold text-slate-700 mb-6">Управление учениками в классах</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Список студентов */}
-            <Card className="md:col-span-1">
-              <CardHeader>
-                <CardTitle>Ученики</CardTitle>
-                <CardDescription>Выберите ученика для просмотра его классов</CardDescription>
+            <Card className="md:col-span-1 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20 p-0 overflow-hidden">
+              <CardHeader className="p-6"> {/* Added padding for CardHeader */}
+                <CardTitle className="text-xl font-semibold text-slate-800">Ученики</CardTitle>
+                <CardDescription className="text-sm text-slate-600">Выберите ученика для просмотра его классов</CardDescription>
                 <div className="relative mt-2">
                   <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     placeholder="Поиск ученика..."
-                    className="pl-8"
+                    className={cn("flex h-10 w-full items-center rounded-xl border border-white/20 bg-slate-100/20 pr-3 py-2 text-sm text-slate-800 placeholder:text-slate-500/80 backdrop-filter backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_2px_0_rgba(0,0,0,0.08)] ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(2,191,122)]/50 focus-visible:border-[rgb(2,191,122)]/70", "pl-8")}
                     value={searchStudentTerm}
                     onChange={(e) => setSearchStudentTerm(e.target.value)}
                   />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6"> {/* Added padding for CardContent */}
                 <div className="h-[400px] overflow-y-auto">
                   {isLoading ? (
-                    <div className="text-center p-4">Загрузка учеников...</div>
+                    <div className="text-center p-4 text-slate-500">Загрузка учеников...</div>
                   ) : filteredStudents.length === 0 ? (
-                    <div className="text-center p-4 text-gray-500">Ученики не найдены</div>
+                    <div className="text-center p-4 text-slate-500">Ученики не найдены</div>
                   ) : (
                     <ul className="space-y-2">
                       {filteredStudents.map((student) => (
                         <li key={student.id}>
                           <Button
-                            variant={selectedStudent === student.id ? "default" : "outline"}
-                            className="w-full justify-start"
+                            className={cn(
+                              selectedStudent === student.id 
+                                ? "w-full justify-start px-3 py-2 text-sm font-semibold rounded-full bg-white/20 backdrop-filter backdrop-blur-md text-[rgb(2,191,122)] border border-white/30 shadow-md transition-[background-color,border-color,box-shadow,opacity,transform] duration-200 ease-in-out" // Active
+                                : "w-full justify-start px-3 py-2 text-sm font-medium rounded-full text-slate-700 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:shadow-sm transition-all duration-150 ease-in-out" // Inactive
+                            )}
                             onClick={() => handleStudentSelect(student.id)}
                           >
                             <UserPlusIcon className="h-4 w-4 mr-2" />
@@ -855,20 +862,20 @@ export default function UsersPage() {
             </Card>
 
             {/* Форма добавления в класс и список классов ученика */}
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>
+            <Card className="md:col-span-2 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20 p-0 overflow-hidden">
+              <CardHeader className="p-6"> {/* Added padding for CardHeader */}
+                <CardTitle className="text-xl font-semibold text-slate-800">
                   {selectedStudent ? (
                     <>Классы ученика: {getStudentName(selectedStudent)}</>
                   ) : (
                     <>Выберите ученика</>
                   )}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-sm text-slate-600">
                   {selectedStudent ? "Управление классами для выбранного ученика" : "Для управления классами сначала выберите ученика из списка слева"}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6"> {/* Added padding for CardContent */}
                 {selectedStudent && (
                   <>
                     <Form {...studentClassForm}>
@@ -879,20 +886,20 @@ export default function UsersPage() {
                             name="studentId"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Ученик</FormLabel>
+                                <FormLabel className="text-slate-700">Ученик</FormLabel>
                                 <Select
                                   onValueChange={field.onChange}
                                   value={selectedStudent?.toString() || field.value}
                                   defaultValue={selectedStudent?.toString()}
                                 >
                                   <FormControl>
-                                    <SelectTrigger>
+                                    <SelectTrigger className="flex h-10 w-full items-center justify-between rounded-xl border border-white/20 bg-slate-100/20 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-500/80 backdrop-filter backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_2px_0_rgba(0,0,0,0.08)] ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(2,191,122)]/50 focus-visible:border-[rgb(2,191,122)]/70">
                                       <SelectValue placeholder="Выберите ученика" />
                                     </SelectTrigger>
                                   </FormControl>
-                                  <SelectContent>
+                                  <SelectContent className="relative z-50 p-1 min-w-[8rem] overflow-hidden rounded-2xl border border-white/20 bg-slate-100/50 backdrop-filter backdrop-blur-xl text-slate-800 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
                                     {students.map((student) => (
-                                      <SelectItem key={student.id} value={student.id.toString()}>
+                                      <SelectItem key={student.id} value={student.id.toString()} className="relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm text-slate-800 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-[rgb(2,191,122)]/20 data-[highlighted]:text-[rgb(2,191,122)] focus:bg-[rgb(2,191,122)]/20 focus:text-[rgb(2,191,122)]">
                                         {student.lastName} {student.firstName}
                                       </SelectItem>
                                     ))}
@@ -907,22 +914,23 @@ export default function UsersPage() {
                             name="classId"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Класс</FormLabel>
+                                <FormLabel className="text-slate-700">Класс</FormLabel>
                                 <Select
                                   onValueChange={field.onChange}
                                   defaultValue={field.value}
                                 >
                                   <FormControl>
-                                    <SelectTrigger>
+                                    <SelectTrigger className="flex h-10 w-full items-center justify-between rounded-xl border border-white/20 bg-slate-100/20 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-500/80 backdrop-filter backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_2px_0_rgba(0,0,0,0.08)] ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(2,191,122)]/50 focus-visible:border-[rgb(2,191,122)]/70">
                                       <SelectValue placeholder="Выберите класс" />
                                     </SelectTrigger>
                                   </FormControl>
-                                  <SelectContent>
+                                  <SelectContent className="relative z-50 p-1 min-w-[8rem] overflow-hidden rounded-2xl border border-white/20 bg-slate-100/50 backdrop-filter backdrop-blur-xl text-slate-800 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
                                     {classes.map((cls) => (
                                       <SelectItem 
                                         key={cls.id} 
                                         value={cls.id.toString()}
                                         disabled={isStudentInClass(selectedStudent, cls.id)}
+                                        className="relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm text-slate-800 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-[rgb(2,191,122)]/20 data-[highlighted]:text-[rgb(2,191,122)] focus:bg-[rgb(2,191,122)]/20 focus:text-[rgb(2,191,122)]"
                                       >
                                         {cls.name} {isStudentInClass(selectedStudent, cls.id) && "(уже добавлен)"}
                                       </SelectItem>
@@ -934,45 +942,47 @@ export default function UsersPage() {
                             )}
                           />
                         </div>
-                        <Button type="submit" disabled={addStudentToClassMutation.isPending}>
+                        <Button type="submit" disabled={addStudentToClassMutation.isPending} className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium text-white bg-gradient-to-b from-[rgb(2,191,122)]/95 via-[rgb(2,191,122)]/90 to-[rgb(2,191,122)]/95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_0_0_1.5px_rgba(255,255,255,0.2),0_5px_15px_-3px_rgba(0,0,0,0.08),_0_8px_25px_-8px_rgba(0,0,0,0.07)] hover:from-[rgb(2,191,122)]/95 hover:via-[rgb(2,191,122)]/90 hover:to-[rgb(2,191,122)]/95 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_0_0_1.5px_rgba(255,255,255,0.3),0_6px_18px_-3px_rgba(0,0,0,0.1),0_10px_30px_-8px_rgba(0,0,0,0.09)] hover:-translate-y-px active:scale-[0.97] active:from-[rgb(2,191,122)]/95 active:via-[rgb(2,191,122)]/90 active:to-[rgb(2,191,122)]/95 active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.25)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(2,191,122)]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100 transition-all duration-200 ease-in-out">
                           {addStudentToClassMutation.isPending ? "Добавление..." : "Добавить в класс"}
                         </Button>
                       </form>
                     </Form>
 
                     <div className="mt-6">
-                      <h3 className="text-lg font-medium mb-4">Текущие классы ученика</h3>
+                      <h3 className="text-lg font-medium text-slate-700 mb-4">Текущие классы ученика</h3>
                       {studentClassesLoading ? (
-                        <div className="text-center p-4">Загрузка классов...</div>
+                        <div className="text-center p-4 text-slate-500">Загрузка классов...</div>
                       ) : studentClasses.length === 0 ? (
-                        <div className="text-center p-4 text-gray-500">Ученик не добавлен ни в один класс</div>
+                        <div className="text-center p-4 text-slate-500">Ученик не добавлен ни в один класс</div>
                       ) : (
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Класс</TableHead>
-                              <TableHead>Учебный год</TableHead>
-                              <TableHead>Уровень</TableHead>
+                        <div className="bg-white/10 backdrop-filter backdrop-blur-md rounded-xl p-0 overflow-hidden shadow-inner border border-white/15 mt-4">
+                          <Table>
+                            <TableHeader className="bg-slate-700/10">
+                              <TableRow>
+                              <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Класс</TableHead>
+                              <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Учебный год</TableHead>
+                              <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Уровень</TableHead>
                             </TableRow>
                           </TableHeader>
-                          <TableBody>
+                          <TableBody className="divide-y divide-white/10">
                             {studentClasses.map((cls) => (
                               <TableRow key={cls.id}>
-                                <TableCell className="font-medium">{cls.name}</TableCell>
-                                <TableCell>{cls.academicYear}</TableCell>
-                                <TableCell>{cls.gradeLevel}</TableCell>
+                                <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800">{cls.name}</TableCell>
+                                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{cls.academicYear}</TableCell>
+                                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{cls.gradeLevel}</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
                         </Table>
+                        </div>
                       )}
                     </div>
                   </>
                 )}
 
                 {!selectedStudent && (
-                  <div className="text-center py-8 text-gray-500">
-                    <BookOpen className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+                  <div className="text-center py-8 text-slate-500">
+                    <BookOpen className="h-10 w-10 text-slate-400 mx-auto mb-2" />
                     <p>Для управления классами выберите ученика из списка слева</p>
                   </div>
                 )}
@@ -984,38 +994,41 @@ export default function UsersPage() {
         {/* Parent-Students Tab */}
         <TabsContent value="parent-students">
           <div className="mb-6">
-            <h2 className="text-2xl font-heading font-bold text-gray-800">Управление связями родитель-ученик</h2>
+            <h2 className="text-3xl font-bold text-slate-700 mb-6">Управление связями родитель-ученик</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Список родителей */}
-            <Card className="md:col-span-1">
-              <CardHeader>
-                <CardTitle>Родители</CardTitle>
-                <CardDescription>Выберите родителя для управления связями с учениками</CardDescription>
+            <Card className="md:col-span-1 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20 p-0 overflow-hidden">
+              <CardHeader className="p-6">
+                <CardTitle className="text-xl font-semibold text-slate-800">Родители</CardTitle>
+                <CardDescription className="text-sm text-slate-600">Выберите родителя для управления связями с учениками</CardDescription>
                 <div className="relative mt-2">
                   <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     placeholder="Поиск родителя..."
-                    className="pl-8"
+                    className={cn("flex h-10 w-full items-center rounded-xl border border-white/20 bg-slate-100/20 pr-3 py-2 text-sm text-slate-800 placeholder:text-slate-500/80 backdrop-filter backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_2px_0_rgba(0,0,0,0.08)] ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(2,191,122)]/50 focus-visible:border-[rgb(2,191,122)]/70", "pl-8")}
                     value={searchParentTerm}
                     onChange={(e) => setSearchParentTerm(e.target.value)}
                   />
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
                 <div className="h-[400px] overflow-y-auto">
                   {isLoading ? (
-                    <div className="text-center p-4">Загрузка родителей...</div>
+                    <div className="text-center p-4 text-slate-500">Загрузка родителей...</div>
                   ) : filteredParents.length === 0 ? (
-                    <div className="text-center p-4 text-gray-500">Родители не найдены</div>
+                    <div className="text-center p-4 text-slate-500">Родители не найдены</div>
                   ) : (
                     <ul className="space-y-2">
                       {filteredParents.map((parent) => (
                         <li key={parent.id}>
                           <Button
-                            variant={selectedParent === parent.id ? "default" : "outline"}
-                            className="w-full justify-start"
+                            className={cn(
+                              selectedParent === parent.id 
+                                ? "w-full justify-start px-3 py-2 text-sm font-semibold rounded-full bg-white/20 backdrop-filter backdrop-blur-md text-[rgb(2,191,122)] border border-white/30 shadow-md transition-[background-color,border-color,box-shadow,opacity,transform] duration-200 ease-in-out" // Active
+                                : "w-full justify-start px-3 py-2 text-sm font-medium rounded-full text-slate-700 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:shadow-sm transition-all duration-150 ease-in-out" // Inactive
+                            )}
                             onClick={() => handleParentSelect(parent.id)}
                           >
                             <UserIcon className="h-4 w-4 mr-2" />
@@ -1030,22 +1043,22 @@ export default function UsersPage() {
             </Card>
 
             {/* Форма добавления и список детей */}
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <CardTitle>
+            <Card className="md:col-span-2 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20 p-0 overflow-hidden">
+              <CardHeader className="p-6">
+                <CardTitle className="text-xl font-semibold text-slate-800">
                   {selectedParent ? (
                     <>Дети родителя: {getStudentName(selectedParent)}</>
                   ) : (
                     <>Выберите родителя</>
                   )}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-sm text-slate-600">
                   {selectedParent 
                     ? "Управление связями для выбранного родителя" 
                     : "Для управления связями сначала выберите родителя из списка слева"}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
                 {selectedParent && (
                   <>
                     <Form {...parentStudentForm}>
@@ -1056,19 +1069,19 @@ export default function UsersPage() {
                             name="parentId"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Родитель</FormLabel>
+                                <FormLabel className="text-slate-700">Родитель</FormLabel>
                                 <Select
                                   onValueChange={field.onChange}
                                   defaultValue={selectedParent?.toString()}
                                 >
                                   <FormControl>
-                                    <SelectTrigger>
+                                    <SelectTrigger className="flex h-10 w-full items-center justify-between rounded-xl border border-white/20 bg-slate-100/20 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-500/80 backdrop-filter backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_2px_0_rgba(0,0,0,0.08)] ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(2,191,122)]/50 focus-visible:border-[rgb(2,191,122)]/70">
                                       <SelectValue placeholder="Выберите родителя" />
                                     </SelectTrigger>
                                   </FormControl>
-                                  <SelectContent>
+                                  <SelectContent className="relative z-50 p-1 min-w-[8rem] overflow-hidden rounded-2xl border border-white/20 bg-slate-100/50 backdrop-filter backdrop-blur-xl text-slate-800 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
                                     {parents.map((parent) => (
-                                      <SelectItem key={parent.id} value={parent.id.toString()}>
+                                      <SelectItem key={parent.id} value={parent.id.toString()} className="relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm text-slate-800 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-[rgb(2,191,122)]/20 data-[highlighted]:text-[rgb(2,191,122)] focus:bg-[rgb(2,191,122)]/20 focus:text-[rgb(2,191,122)]">
                                         {parent.lastName} {parent.firstName}
                                       </SelectItem>
                                     ))}
@@ -1083,22 +1096,23 @@ export default function UsersPage() {
                             name="studentId"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Ученик</FormLabel>
+                                <FormLabel className="text-slate-700">Ученик</FormLabel>
                                 <Select
                                   onValueChange={field.onChange}
                                   defaultValue={field.value}
                                 >
                                   <FormControl>
-                                    <SelectTrigger>
+                                    <SelectTrigger className="flex h-10 w-full items-center justify-between rounded-xl border border-white/20 bg-slate-100/20 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-500/80 backdrop-filter backdrop-blur-md shadow-[inset_0_1px_0_0_rgba(255,255,255,0.1),inset_0_-1px_2px_0_rgba(0,0,0,0.08)] ring-offset-background transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(2,191,122)]/50 focus-visible:border-[rgb(2,191,122)]/70">
                                       <SelectValue placeholder="Выберите ученика" />
                                     </SelectTrigger>
                                   </FormControl>
-                                  <SelectContent>
+                                  <SelectContent className="relative z-50 p-1 min-w-[8rem] overflow-hidden rounded-2xl border border-white/20 bg-slate-100/50 backdrop-filter backdrop-blur-xl text-slate-800 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2">
                                     {students.map((student) => (
                                       <SelectItem 
                                         key={student.id} 
                                         value={student.id.toString()}
                                         disabled={isStudentConnectedToParent(selectedParent, student.id)}
+                                        className="relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm text-slate-800 outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-[rgb(2,191,122)]/20 data-[highlighted]:text-[rgb(2,191,122)] focus:bg-[rgb(2,191,122)]/20 focus:text-[rgb(2,191,122)]"
                                       >
                                         {student.lastName} {student.firstName} 
                                         {isStudentConnectedToParent(selectedParent, student.id) && " (уже связан)"}
@@ -1111,43 +1125,45 @@ export default function UsersPage() {
                             )}
                           />
                         </div>
-                        <Button type="submit" disabled={addParentStudentMutation.isPending}>
+                        <Button type="submit" disabled={addParentStudentMutation.isPending} className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium text-white bg-gradient-to-b from-[rgb(2,191,122)]/95 via-[rgb(2,191,122)]/90 to-[rgb(2,191,122)]/95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_0_0_1.5px_rgba(255,255,255,0.2),0_5px_15px_-3px_rgba(0,0,0,0.08),_0_8px_25px_-8px_rgba(0,0,0,0.07)] hover:from-[rgb(2,191,122)]/95 hover:via-[rgb(2,191,122)]/90 hover:to-[rgb(2,191,122)]/95 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_0_0_1.5px_rgba(255,255,255,0.3),0_6px_18px_-3px_rgba(0,0,0,0.1),0_10px_30px_-8px_rgba(0,0,0,0.09)] hover:-translate-y-px active:scale-[0.97] active:from-[rgb(2,191,122)]/95 active:via-[rgb(2,191,122)]/90 active:to-[rgb(2,191,122)]/95 active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.25)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(2,191,122)]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100 transition-all duration-200 ease-in-out">
                           {addParentStudentMutation.isPending ? "Добавление..." : "Добавить ребенка"}
                         </Button>
                       </form>
                     </Form>
 
                     <div className="mt-6">
-                      <h3 className="text-lg font-medium mb-4">Дети родителя</h3>
+                      <h3 className="text-lg font-medium text-slate-700 mb-4">Дети родителя</h3>
                       {parentStudentsLoading ? (
-                        <div className="text-center p-4">Загрузка связей...</div>
+                        <div className="text-center p-4 text-slate-500">Загрузка связей...</div>
                       ) : parentStudents.length === 0 ? (
-                        <div className="text-center p-4 text-gray-500">У родителя нет связанных учеников</div>
+                        <div className="text-center p-4 text-slate-500">У родителя нет связанных учеников</div>
                       ) : (
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Ученик</TableHead>
-                              <TableHead>Email</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {getConnectedStudents().map((connection) => (
-                              <TableRow key={connection.id}>
-                                <TableCell className="font-medium">{connection.name}</TableCell>
-                                <TableCell>{connection.email || "-"}</TableCell>
+                        <div className="bg-white/10 backdrop-filter backdrop-blur-md rounded-xl p-0 overflow-hidden shadow-inner border border-white/15 mt-4">
+                          <Table>
+                            <TableHeader className="bg-slate-700/10">
+                              <TableRow>
+                                <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Ученик</TableHead>
+                                <TableHead className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">Email</TableHead>
                               </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
+                            </TableHeader>
+                            <TableBody className="divide-y divide-white/10">
+                              {getConnectedStudents().map((connection) => (
+                                <TableRow key={connection.id}>
+                                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800">{connection.name}</TableCell>
+                                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{connection.email || "-"}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
                       )}
                     </div>
                   </>
                 )}
 
                 {!selectedParent && (
-                  <div className="text-center py-8 text-gray-500">
-                    <UsersIcon className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+                  <div className="text-center py-8 text-slate-500">
+                    <UsersIcon className="h-10 w-10 text-slate-400 mx-auto mb-2" />
                     <p>Для управления связями выберите родителя из списка слева</p>
                   </div>
                 )}
@@ -1159,10 +1175,10 @@ export default function UsersPage() {
       
       {/* Add User Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="sm:max-w-md max-w-[95vw] w-full max-h-[90vh] overflow-y-auto">
+        <DialogContent className="p-6 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20 sm:max-w-md max-w-[95vw] w-full max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Добавить пользователя</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-slate-800">Добавить пользователя</DialogTitle>
+            <DialogDescription className="text-slate-600">
               Введите информацию о новом пользователе
             </DialogDescription>
           </DialogHeader>
@@ -1528,7 +1544,11 @@ export default function UsersPage() {
               )}
               
               <DialogFooter>
-                <Button type="submit" disabled={addUserMutation.isPending}>
+                <Button 
+                  type="submit" 
+                  disabled={addUserMutation.isPending}
+                  className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium text-white bg-gradient-to-b from-[rgb(2,191,122)]/95 via-[rgb(2,191,122)]/90 to-[rgb(2,191,122)]/95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_0_0_1.5px_rgba(255,255,255,0.2),0_5px_15px_-3px_rgba(0,0,0,0.08),_0_8px_25px_-8px_rgba(0,0,0,0.07)] hover:from-[rgb(2,191,122)]/95 hover:via-[rgb(2,191,122)]/90 hover:to-[rgb(2,191,122)]/95 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_0_0_1.5px_rgba(255,255,255,0.3),0_6px_18px_-3px_rgba(0,0,0,0.1),0_10px_30px_-8px_rgba(0,0,0,0.09)] hover:-translate-y-px active:scale-[0.97] active:from-[rgb(2,191,122)]/95 active:via-[rgb(2,191,122)]/90 active:to-[rgb(2,191,122)]/95 active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.25)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(2,191,122)]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100 transition-all duration-200 ease-in-out"
+                >
                   {addUserMutation.isPending ? "Добавление..." : "Добавить пользователя"}
                 </Button>
               </DialogFooter>
@@ -1538,11 +1558,12 @@ export default function UsersPage() {
       </Dialog>
       
       {/* Edit User Dialog */}
+      </div> {/* END NEW WRAPPER DIV */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-md max-w-[95vw] w-full max-h-[90vh] overflow-y-auto">
+        <DialogContent className="p-6 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20 sm:max-w-md max-w-[95vw] w-full max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Редактировать пользователя</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-slate-800">Редактировать пользователя</DialogTitle>
+            <DialogDescription className="text-slate-600">
               Измените информацию о пользователе
             </DialogDescription>
           </DialogHeader>
@@ -1904,7 +1925,11 @@ export default function UsersPage() {
               )}
               
               <DialogFooter>
-                <Button type="submit" disabled={editUserMutation.isPending}>
+                <Button 
+                  type="submit" 
+                  disabled={editUserMutation.isPending}
+                  className="inline-flex items-center justify-center rounded-full px-6 py-3 text-base font-medium text-white bg-gradient-to-b from-[rgb(2,191,122)]/95 via-[rgb(2,191,122)]/90 to-[rgb(2,191,122)]/95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_0_0_1.5px_rgba(255,255,255,0.2),0_5px_15px_-3px_rgba(0,0,0,0.08),_0_8px_25px_-8px_rgba(0,0,0,0.07)] hover:from-[rgb(2,191,122)]/95 hover:via-[rgb(2,191,122)]/90 hover:to-[rgb(2,191,122)]/95 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_0_0_1.5px_rgba(255,255,255,0.3),0_6px_18px_-3px_rgba(0,0,0,0.1),0_10px_30px_-8px_rgba(0,0,0,0.09)] hover:-translate-y-px active:scale-[0.97] active:from-[rgb(2,191,122)]/95 active:via-[rgb(2,191,122)]/90 active:to-[rgb(2,191,122)]/95 active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.25)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(2,191,122)]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100 transition-all duration-200 ease-in-out"
+                >
                   {editUserMutation.isPending ? "Сохранение..." : "Сохранить изменения"}
                 </Button>
               </DialogFooter>

@@ -31,9 +31,9 @@ export function RecentActivity() {
   ];
   
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4">
-      <h3 className="text-lg font-heading font-semibold text-gray-800 mb-4">Последние действия</h3>
-      <div className="space-y-3">
+    <div className="p-4 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
+      <h3 className="text-xl font-semibold text-slate-700 mb-4">Последние действия</h3>
+      <div className="space-y-3 max-h-80 overflow-y-auto">
         {activities.map((activity, index) => (
           <ActivityItem 
             key={index}
@@ -45,7 +45,7 @@ export function RecentActivity() {
         ))}
       </div>
       <div className="mt-4 text-center">
-        <Link href="/system-logs" className="text-sm text-primary hover:text-primary-dark hover:underline">
+        <Link href="/system-logs" className="text-sm text-[rgb(2,191,122)] hover:text-[rgb(2,191,122)]/80 hover:underline">
           Все действия
         </Link>
       </div>

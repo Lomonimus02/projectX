@@ -227,49 +227,48 @@ export function AdminClassList() {
   };
   
   return (
-    <div className="lg:col-span-2 bg-white rounded-lg shadow-sm p-4">
+    <div className="lg:col-span-2 p-4 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-heading font-semibold text-gray-800">Классы</h3>
+        <h3 className="text-xl font-semibold text-slate-700 mb-4">Классы</h3>
         <Button 
-          size="sm" 
-          className="flex items-center gap-1"
+          className="inline-flex items-center justify-center gap-1 rounded-full px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-b from-[rgb(2,191,122)]/95 via-[rgb(2,191,122)]/90 to-[rgb(2,191,122)]/95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_0_0_1.5px_rgba(255,255,255,0.2),0_5px_15px_-3px_rgba(0,0,0,0.08),_0_8px_25px_-8px_rgba(0,0,0,0.07)] hover:from-[rgb(2,191,122)]/95 hover:via-[rgb(2,191,122)]/90 hover:to-[rgb(2,191,122)]/95 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_0_0_1.5px_rgba(255,255,255,0.3),0_6px_18px_-3px_rgba(0,0,0,0.1),0_10px_30px_-8px_rgba(0,0,0,0.09)] hover:-translate-y-px active:scale-[0.97] active:from-[rgb(2,191,122)]/95 active:via-[rgb(2,191,122)]/90 active:to-[rgb(2,191,122)]/95 active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.25)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(2,191,122)]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100 transition-all duration-200 ease-in-out"
           onClick={() => setIsAddDialogOpen(true)}
         >
           <PlusIcon className="h-4 w-4" />
           Добавить
         </Button>
       </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="overflow-x-auto max-h-72 overflow-y-auto">
+        <table className="min-w-full divide-y divide-white/15">
+          <thead className="bg-slate-500/10">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Название
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Класс
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Учеников
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Учебный год
               </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Действия
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="divide-y divide-white/15">
             {isLoading ? (
               <tr>
-                <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
+                <td colSpan={5} className="px-6 py-4 text-center text-sm text-slate-500">
                   Загрузка...
                 </td>
               </tr>
             ) : classes.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
+                <td colSpan={5} className="px-6 py-4 text-center text-sm text-slate-500">
                   Нет данных
                 </td>
               </tr>
@@ -277,16 +276,16 @@ export function AdminClassList() {
               classes.map((classItem) => (
                 <tr key={classItem.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{classItem.name}</div>
+                    <div className="text-sm font-medium text-slate-700">{classItem.name}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{classItem.gradeLevel}</div>
+                    <div className="text-sm font-medium text-slate-700">{classItem.gradeLevel}</div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"> {/* Text color for badge content might need adjustment if illegible */}
                     <Badge variant="outline" className="bg-primary-50 border-0">0</Badge>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{classItem.academicYear}</div>
+                    <div className="text-sm font-medium text-slate-700">{classItem.academicYear}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end space-x-2">
@@ -304,7 +303,7 @@ export function AdminClassList() {
                           setIsEditDialogOpen(true);
                         }}
                       >
-                        <PencilIcon className="h-4 w-4 text-primary" />
+                        <PencilIcon className="h-4 w-4 text-[rgb(2,191,122)]" />
                       </Button>
                       <Button 
                         variant="ghost" 
@@ -314,7 +313,7 @@ export function AdminClassList() {
                           setIsDeleteDialogOpen(true);
                         }}
                       >
-                        <Trash2Icon className="h-4 w-4 text-destructive" />
+                        <Trash2Icon className="h-4 w-4 text-red-500" />
                       </Button>
                     </div>
                   </td>
@@ -327,7 +326,7 @@ export function AdminClassList() {
       
       {/* Диалог для добавления класса */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent>
+        <DialogContent className="p-6 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
           <DialogHeader>
             <DialogTitle>Добавить новый класс</DialogTitle>
             <DialogDescription>
@@ -438,7 +437,7 @@ export function AdminClassList() {
       
       {/* Диалог для редактирования класса */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
+        <DialogContent className="p-6 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
           <DialogHeader>
             <DialogTitle>Редактировать класс</DialogTitle>
             <DialogDescription>
@@ -540,7 +539,7 @@ export function AdminClassList() {
       
       {/* Диалог подтверждения удаления класса */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="p-6 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
           <AlertDialogHeader>
             <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
             <AlertDialogDescription>

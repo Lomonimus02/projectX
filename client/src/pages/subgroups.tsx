@@ -481,9 +481,9 @@ export default function SubgroupsPage() {
         
         <div className="grid grid-cols-1 gap-6">
           {/* Filters */}
-          <Card>
+          <Card className="bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
             <CardHeader>
-              <CardTitle>Фильтры</CardTitle>
+              <CardTitle className="text-slate-800">Фильтры</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
               {/* Выбор школы доступен только для суперадмина */}
@@ -549,10 +549,10 @@ export default function SubgroupsPage() {
           </Card>
           
           {/* Subgroups list */}
-          <Card>
+          <Card className="bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
             <CardHeader>
-              <CardTitle>Подгруппы</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-slate-800">Подгруппы</CardTitle>
+              <CardDescription className="text-slate-600">
                 Здесь отображаются все подгруппы с возможностью управления
               </CardDescription>
             </CardHeader>
@@ -563,7 +563,7 @@ export default function SubgroupsPage() {
                 </div>
               ) : filteredSubgroups.length === 0 ? (
                 <div className="text-center py-6">
-                  <p className="text-muted-foreground">Подгруппы не найдены</p>
+                  <p className="text-slate-500">Подгруппы не найдены</p>
                 </div>
               ) : (
                 <Table>
@@ -621,10 +621,10 @@ export default function SubgroupsPage() {
           
           {/* Subgroup details with students tab (visible when a subgroup is selected) */}
           {selectedSubgroup && (
-            <Card>
+            <Card className="bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
               <CardHeader>
-                <CardTitle>{selectedSubgroup.name}</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-slate-800">{selectedSubgroup.name}</CardTitle>
+                <CardDescription className="text-slate-600">
                   {selectedSubgroup.description || "Нет описания"}
                 </CardDescription>
               </CardHeader>
@@ -650,7 +650,7 @@ export default function SubgroupsPage() {
                       </div>
                     ) : subgroupStudents.length === 0 ? (
                       <div className="text-center py-6">
-                        <p className="text-muted-foreground">В подгруппе нет учеников</p>
+                        <p className="text-slate-500">В подгруппе нет учеников</p>
                       </div>
                     ) : (
                       <Table>

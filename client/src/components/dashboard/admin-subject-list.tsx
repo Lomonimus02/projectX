@@ -179,12 +179,11 @@ export function AdminSubjectList() {
   };
   
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4">
+    <div className="p-4 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-heading font-semibold text-gray-800">Предметы</h3>
+        <h3 className="text-xl font-semibold text-slate-700 mb-4">Предметы</h3>
         <Button 
-          size="sm" 
-          className="flex items-center gap-1"
+          className="inline-flex items-center justify-center gap-1 rounded-full px-5 py-2.5 text-sm font-medium text-white bg-gradient-to-b from-[rgb(2,191,122)]/95 via-[rgb(2,191,122)]/90 to-[rgb(2,191,122)]/95 shadow-[inset_0_1px_1px_rgba(255,255,255,0.4),inset_0_0_0_1.5px_rgba(255,255,255,0.2),0_5px_15px_-3px_rgba(0,0,0,0.08),_0_8px_25px_-8px_rgba(0,0,0,0.07)] hover:from-[rgb(2,191,122)]/95 hover:via-[rgb(2,191,122)]/90 hover:to-[rgb(2,191,122)]/95 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.5),inset_0_0_0_1.5px_rgba(255,255,255,0.3),0_6px_18px_-3px_rgba(0,0,0,0.1),0_10px_30px_-8px_rgba(0,0,0,0.09)] hover:-translate-y-px active:scale-[0.97] active:from-[rgb(2,191,122)]/95 active:via-[rgb(2,191,122)]/90 active:to-[rgb(2,191,122)]/95 active:shadow-[inset_0_1px_3px_rgba(0,0,0,0.25)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[rgb(2,191,122)]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-100 transition-all duration-200 ease-in-out"
           onClick={() => setIsAddDialogOpen(true)}
         >
           <PlusIcon className="h-4 w-4" />
@@ -192,30 +191,30 @@ export function AdminSubjectList() {
         </Button>
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+        <table className="min-w-full divide-y divide-white/15">
+          <thead className="bg-slate-500/10">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Название
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Описание
               </th>
-              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
                 Действия
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="divide-y divide-white/15">
             {isLoading ? (
               <tr>
-                <td colSpan={3} className="px-6 py-4 text-center text-sm text-gray-500">
+                <td colSpan={3} className="px-6 py-4 text-center text-sm text-slate-500">
                   Загрузка...
                 </td>
               </tr>
             ) : subjects.length === 0 ? (
               <tr>
-                <td colSpan={3} className="px-6 py-4 text-center text-sm text-gray-500">
+                <td colSpan={3} className="px-6 py-4 text-center text-sm text-slate-500">
                   Нет данных
                 </td>
               </tr>
@@ -223,24 +222,24 @@ export function AdminSubjectList() {
               subjects.map((subject) => (
                 <tr key={subject.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{subject.name}</div>
+                    <div className="text-sm font-medium text-slate-700">{subject.name}</div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-gray-500">{subject.description || "-"}</div>
+                    <div className="text-sm text-slate-500">{subject.description || "-"}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end gap-2">
-                      <button className="text-primary hover:text-primary-dark">
-                        <PencilIcon className="h-4 w-4 inline" />
+                      <button className="text-[rgb(2,191,122)] hover:text-[rgb(2,191,122)]/80">
+                        <PencilIcon className="h-4 w-4 text-[rgb(2,191,122)]" />
                       </button>
                       <button 
-                        className="text-red-500 hover:text-red-700"
+                        className="text-red-500 hover:text-red-700/80"
                         onClick={(e) => {
                           e.preventDefault();
                           handleDeleteSubject(subject);
                         }}
                       >
-                        <Trash2Icon className="h-4 w-4 inline" />
+                        <Trash2Icon className="h-4 w-4 text-red-500" />
                       </button>
                     </div>
                   </td>
@@ -253,7 +252,7 @@ export function AdminSubjectList() {
       
       {/* Диалог для подтверждения удаления предмета */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
+        <DialogContent className="p-6 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
           <DialogHeader>
             <DialogTitle>Удаление предмета</DialogTitle>
             <DialogDescription>
@@ -285,7 +284,7 @@ export function AdminSubjectList() {
       
       {/* Диалог для добавления предмета */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent>
+        <DialogContent className="p-6 bg-slate-200/15 backdrop-filter backdrop-blur-2xl rounded-3xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.18),_0_15px_30px_-20px_rgba(0,0,0,0.12)] border border-white/20">
           <DialogHeader>
             <DialogTitle>Добавить новый предмет</DialogTitle>
             <DialogDescription>
